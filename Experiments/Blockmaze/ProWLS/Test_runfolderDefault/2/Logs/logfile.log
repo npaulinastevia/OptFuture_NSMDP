@@ -1,0 +1,98 @@
+Module path:  Environments.Blockmaze Blockmaze
+Dynamically loaded from:  <class 'Environments.Blockmaze.Blockmaze'>
+Module path:  Src.Algorithms.ProWLS ProWLS
+Dynamically loaded from:  <class 'Src.Algorithms.ProWLS.ProWLS'>
+=====Configurations=====
+ Namespace(NN_basis_dim='32', Policy_basis_dim='32', actor_lr=0.01, algo_name='ProWLS', base=0, batch_size=1000, buffer_size=1000, debug=True, delta=5, entropy_lambda=0.1, env_name='Blockmaze', experiment='Test_runfolder', extrapolator_basis='Poly', folder_suffix='Default', fourier_coupled=True, fourier_k=7, fourier_order=-1, gamma=0.99, gauss_std=1.5, gpu=0, hyper='default', importance_clip=10.0, inc=1, log_output='term_file', max_episodes=100, max_inner=150, max_steps=500, optim='rmsprop', oracle=-1000, raw_basis=True, restore=False, save_count=10, save_model=True, seed=2, speed=2, state_lr=0.001, summary=True, swarm=False, timestamp='1|14|15:23:58')
+Actions space: 4 :: State space: 400
+State features:  [('dummy_param', torch.Size([1]))]
+Policy:  [('fc1.weight', torch.Size([4, 400])), ('fc1.bias', torch.Size([4]))]
+0 :: Rewards -399.010 :: Rewards_per_eps -399.010 :: steps: 40.00 :: Time: 0.015(0.00037/step) :: Entropy : 0.000 :: Grads : [[], []]
+Runtime Error:  inverse_cpu: U(1,1) is zero, singular U.
+10 :: Rewards -4388.120 :: Rewards_per_eps -398.020 :: steps: 400.00 :: Time: 0.142(0.00036/step) :: Entropy : 0.000 :: Grads : [[3.7375954e-05, 7.0336864e-07], []]
+20 :: Rewards -8368.320 :: Rewards_per_eps -398.020 :: steps: 400.00 :: Time: 0.453(0.00113/step) :: Entropy : 0.000 :: Grads : [[0.0, 0.0], []]
+30 :: Rewards -12348.520 :: Rewards_per_eps -398.020 :: steps: 400.00 :: Time: 0.590(0.00147/step) :: Entropy : 0.000 :: Grads : [[0.0, 0.0], []]
+40 :: Rewards -16328.720 :: Rewards_per_eps -398.020 :: steps: 400.00 :: Time: 0.738(0.00185/step) :: Entropy : 0.000 :: Grads : [[0.0, 0.0], []]
+50 :: Rewards -20308.920 :: Rewards_per_eps -398.020 :: steps: 400.00 :: Time: 0.922(0.00231/step) :: Entropy : 0.000 :: Grads : [[0.0, 0.0], []]
+60 :: Rewards -24289.120 :: Rewards_per_eps -398.020 :: steps: 400.00 :: Time: 1.011(0.00253/step) :: Entropy : 0.000 :: Grads : [[0.0, 0.0], []]
+70 :: Rewards -28269.320 :: Rewards_per_eps -398.020 :: steps: 400.00 :: Time: 1.119(0.00280/step) :: Entropy : 0.000 :: Grads : [[0.0, 0.0], []]
+80 :: Rewards -32249.520 :: Rewards_per_eps -398.020 :: steps: 400.00 :: Time: 1.260(0.00315/step) :: Entropy : 0.000 :: Grads : [[0.0, 0.0], []]
+90 :: Rewards -36229.720 :: Rewards_per_eps -398.020 :: steps: 400.00 :: Time: 1.361(0.00340/step) :: Entropy : 0.000 :: Grads : [[0.0, 0.0], []]
+99 :: Rewards -39811.900 :: Rewards_per_eps -398.020 :: steps: 360.00 :: Time: 1.488(0.00413/step) :: Entropy : 0.000 :: Grads : [[0.0, 0.0], []]
+Total train time taken: 92.5661518573761
+0
+400
+800
+1200
+1600
+2000
+2400
+2800
+3200
+3600
+4000
+4400
+4800
+5200
+5600
+6000
+6400
+6800
+7200
+7600
+8000
+8400
+8800
+9200
+9600
+10000
+10400
+10800
+11200
+11600
+12000
+12400
+12800
+13200
+13600
+14000
+14400
+14800
+15200
+15600
+16000
+16400
+16800
+17200
+17600
+18000
+18400
+18800
+19200
+19600
+20000
+20400
+20800
+21200
+21600
+22000
+22400
+22800
+23200
+23600
+24000
+24400
+24800
+25200
+25600
+26000
+26400
+26800
+27200
+27600
+28000
+28400
+28800
+29200
+29600
+Total test time taken: 6.625220060348511

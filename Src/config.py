@@ -1,3 +1,4 @@
+import os
 import sys
 from yaml import dump
 from os import path
@@ -52,9 +53,11 @@ class Config(object):
         # Create directories
         for (key, val) in self.paths.items():
             if key not in ['root', 'datasets', 'data']:
+                os.makedirs(val, exist_ok=True)
                 utils.create_directory_tree(val)
 
         # Save the all the configuration settings
+
         dump(args.__dict__, open(path.join(self.paths['experiment'], 'args.yaml'), 'w'), default_flow_style=False,
              explicit_start=True)
 
@@ -94,7 +97,7 @@ class Config(object):
 
     def get_domain(self, tag, args, path, debug=True):
 
-        if tag == 'NS_Reco' or tag == 'NS_Reacher':
+        if tag == 'NS_Reco' or tag == 'NS_Reacher' or tag=='Blockmaze' or tag=='CartPole' or tag=='MsPacman':
             obj = utils.dynamic_load(path, tag, load_class=True)
             env = obj(speed=args.speed, oracle=args.oracle, debug=debug)
             return env, False, env.action_space.dtype == np.float32

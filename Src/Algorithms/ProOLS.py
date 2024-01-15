@@ -33,8 +33,13 @@ class ProOLS(Agent):
 
     def get_action(self, state):
         state = tensor(state, dtype=float32, requires_grad=False, device=self.config.device)
-        state = self.state_features.forward(state.view(1, -1))
+        if len(self.config.state_space)<=1:
+            state = self.state_features.forward(state.view(1, -1))
+        else:
+            state = self.state_features.forward(state)
+        #state = self.state_features.forward(state.view(1, -1))
         action, prob, dist = self.actor.get_action_w_prob_dist(state)
+
         # if self.config.debug:
         #     self.track_entropy(dist, action)
 
@@ -63,11 +68,11 @@ class ProOLS(Agent):
         for iter in range(self.config.max_inner):
             id, s, a, beta, r, mask = self.memory.sample(batch_size)            # B, BxHxD, BxHxA, BxH, BxH, BxH
 
-            B, H, D = s.shape
+            B, H, *D = s.shape
             _, _, A = a.shape
 
             # create state features
-            s_feature = self.state_features.forward(s.view(B * H, D))           # BxHxD -> (BxH)xd
+            s_feature = self.state_features.forward(s.view(B * H, *D))           # BxHxD -> (BxH)xd
 
             # Get action probabilities
             log_pi, dist_all = self.actor.get_logprob_dist(s_feature, a.view(B * H, -1))     # (BxH)xd, (BxH)xA

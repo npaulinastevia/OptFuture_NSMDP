@@ -55,9 +55,13 @@ class Agent:
         except ValueError as error:
             print("Loading failed: ", error)
 
-    def step(self, loss, clip_norm=False):
+    def step(self, loss, clip_norm=1.0):#0.25
         self.clear_gradients()
         loss.backward()
+        #for _, module in self.modules:
+        #    print(module)
+         #   assert False
+         #   torch.nn.utils.clip_grad_norm_(module.parameters(),0.25)
         for _, module in self.modules:
             module.step(clip_norm)
 

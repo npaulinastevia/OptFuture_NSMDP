@@ -1,4 +1,7 @@
 from __future__ import print_function
+
+import os
+
 import numpy as np
 import torch
 from torch import tensor, float32, int32
@@ -221,27 +224,41 @@ def search(dir, name, exact=False):
 
 def dynamic_load(dir, name, load_class=False):
     try:
-        abs_path = search(dir, name).split('/')[1:]
-        pos = abs_path.index('OptFuture')
-        module_path = '.'.join([str(item) for item in abs_path[pos + 1:]])
-        print("Module path: ", module_path, name)
-        if load_class:
-            obj = getattr(importlib.import_module(module_path), name)
+        if '\\' in search(dir, name):
+            abs_path = search(dir, name).split('\\')[1:]
+            pos = abs_path.index('OptFuture_NSMDP')
+            module_path = '.'.join([str(item) for item in abs_path[pos + 1:]])
+            print("Module path: ", module_path, name)
+            if load_class:
+                obj = getattr(importlib.import_module(module_path), name)
+            else:
+                obj = importlib.import_module(module_path)
+            print("Dynamically loaded from: ", obj)
+            return obj
         else:
-            obj = importlib.import_module(module_path)
-        print("Dynamically loaded from: ", obj)
-        return obj
+            abs_path = search(dir, name).split('/')[1:]
+            print(dir,name,abs_path,search(dir, name),'333333')
+            pos = abs_path.index('OptFuture')
+            module_path = '.'.join([str(item) for item in abs_path[pos + 1:]])
+            print("Module path: ", module_path, name)
+            if load_class:
+                obj = getattr(importlib.import_module(module_path), name)
+            else:
+                obj = importlib.import_module(module_path)
+            print("Dynamically loaded from: ", obj)
+            return obj
+
     except:
         raise ValueError("Failed to dynamically load the class: " + name )
 
 def check_n_create(dir_path, overwrite=False):
     try:
         if not path.exists(dir_path):
-            mkdir(dir_path)
+            os.makedirs(dir_path,exist_ok=True)#mkdir(dir_path)
         else:
             if overwrite:
                shutil.rmtree(dir_path)
-               mkdir(dir_path)
+               os.makedirs(dir_path,exist_ok=True)
     except FileExistsError:
         print("\n ##### Warning File Exists... perhaps multi-threading error? \n")
 
@@ -279,7 +296,11 @@ class TrajectoryBuffer:
 
         max_horizon = config.env.max_horizon
 
-        self.s = torch.zeros((buffer_size, max_horizon, state_dim), dtype=stype, requires_grad=False, device=config.device)
+        if len(config.state_space)<=2:
+            self.s = torch.zeros((buffer_size, max_horizon, state_dim), dtype=stype, requires_grad=False, device=config.device)
+        else:
+            self.s = torch.zeros((buffer_size, max_horizon, *config.state_space), dtype=stype, requires_grad=False,
+                                 device=config.device)
         self.a = torch.zeros((buffer_size, max_horizon, action_dim), dtype=atype, requires_grad=False, device=config.device)
         self.beta = torch.ones((buffer_size, max_horizon), dtype=float32, requires_grad=False, device=config.device)
         self.mask = torch.zeros((buffer_size, max_horizon), dtype=float32, requires_grad=False, device=config.device)

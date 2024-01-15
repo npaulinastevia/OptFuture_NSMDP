@@ -30,7 +30,7 @@ class Basis(NeuralNet):
         self.state_dim = len(self.state_low)
         self.flag = (self.state_diff > 1e3).any().item()  # Flag to Normalize or not
 
-        print("State Low: {} :: State High: {}".format(self.state_low, self.state_high))
+        #print("State Low: {} :: State High: {}".format(self.state_low, self.state_high))
 
     def init(self):
         print("State features: ", [(m, p.shape) for m, p in self.named_parameters()])

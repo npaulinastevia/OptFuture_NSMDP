@@ -1,0 +1,267 @@
+Module path:  Environments.CartPole CartPole
+Dynamically loaded from:  <class 'Environments.CartPole.CartPole'>
+Module path:  Src.Algorithms.ProWLS ProWLS
+Dynamically loaded from:  <class 'Src.Algorithms.ProWLS.ProWLS'>
+=====Configurations=====
+ Namespace(NN_basis_dim='32', Policy_basis_dim='32', actor_lr=0.01, algo_name='ProWLS', base=0, batch_size=1000, buffer_size=1000, debug=True, delta=5, entropy_lambda=0.1, env_name='CartPole', experiment='Test_runfolder', extrapolator_basis='Poly', folder_suffix='Default', fourier_coupled=True, fourier_k=7, fourier_order=-1, gamma=0.99, gauss_std=1.5, gpu=0, hyper='default', importance_clip=10.0, inc=1, log_output='term_file', max_episodes=500, max_inner=150, max_steps=500, optim='rmsprop', oracle=-1000, raw_basis=True, restore=False, save_count=10, save_model=True, seed=2, speed=2, state_lr=0.001, summary=True, swarm=False, timestamp='1|13|7:36:46')
+Actions space: 2 :: State space: 4
+State features:  [('dummy_param', torch.Size([1]))]
+Policy:  [('fc1.weight', torch.Size([2, 4])), ('fc1.bias', torch.Size([2]))]
+0 :: Rewards 17.000 :: steps: 0.34 :: Time: 0.000(0.00029/step) :: Entropy : 0.000 :: Grads : [[], []]
+50 :: Rewards 753.000 :: steps: 14.72 :: Time: 0.143(0.00969/step) :: Entropy : 0.000 :: Grads : [[0.050529275, 0.12779197], []]
+100 :: Rewards 1509.000 :: steps: 15.12 :: Time: 0.268(0.01769/step) :: Entropy : 0.000 :: Grads : [[0.0031313123, 0.17663068], []]
+150 :: Rewards 2141.000 :: steps: 12.64 :: Time: 0.396(0.03133/step) :: Entropy : 0.000 :: Grads : [[0.054818455, 0.12262098], []]
+200 :: Rewards 2670.000 :: steps: 10.58 :: Time: 0.586(0.05539/step) :: Entropy : 0.000 :: Grads : [[0.023865664, 0.16348195], []]
+250 :: Rewards 3171.000 :: steps: 10.02 :: Time: 0.663(0.06621/step) :: Entropy : 0.000 :: Grads : [[0.029651161, 0.15782797], []]
+300 :: Rewards 3647.000 :: steps: 9.52 :: Time: 0.852(0.08951/step) :: Entropy : 0.000 :: Grads : [[0.021496357, 0.16614981], []]
+350 :: Rewards 4169.000 :: steps: 10.44 :: Time: 0.988(0.09461/step) :: Entropy : 0.000 :: Grads : [[0.056433387, 0.08270765], []]
+400 :: Rewards 4641.000 :: steps: 9.44 :: Time: 1.150(0.12181/step) :: Entropy : 0.000 :: Grads : [[0.056417055, 0.10352553], []]
+450 :: Rewards 5110.000 :: steps: 9.38 :: Time: 1.267(0.13506/step) :: Entropy : 0.000 :: Grads : [[0.044294834, 0.13380852], []]
+499 :: Rewards 5566.000 :: steps: 9.12 :: Time: 1.410(0.15456/step) :: Entropy : 0.000 :: Grads : [[0.05197052, 0.13125156], []]
+Total train time taken: 387.7197241783142
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 1 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+0 :: Rewards 8.000 :: steps: 0.16 :: Time: 0.000(0.00062/step) :: Entropy : 0.000 :: Grads : [[0.05197052, 0.13125156], []]
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 2 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 3 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 4 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 5 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 6 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 7 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 8 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 9 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 10 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 11 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 12 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 13 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 14 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 15 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 16 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 17 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 18 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 19 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 20 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 21 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 22 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 23 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 24 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 25 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 26 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 27 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 28 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 29 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 30 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 31 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 32 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 33 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 34 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 35 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 36 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 37 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 38 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 39 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 40 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 41 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 42 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 43 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 44 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 45 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 46 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 47 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 48 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 49 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes

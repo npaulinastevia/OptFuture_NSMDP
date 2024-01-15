@@ -44,18 +44,80 @@ class Categorical(Policy):
         # overrides the action dim variable defined by super-class
         if action_dim is not None:
             self.action_dim = action_dim
+        #self.fc1=nn.Conv2d(1,)
+        self.config=config
 
-        self.fc1 = nn.Linear(self.state_dim, self.action_dim)
+        if len(config.state_space)<=1:
+            self.fc1 = nn.Linear(self.state_dim, self.action_dim)
+        else:
+            #self.conv1=nn.Conv2d(1,32,8,stride=4)
+            #torch.nn.init.kaiming_uniform_(self.conv1.weight,mode='fan_in',nonlinearity='relu')
+            #self.pool=nn.MaxPool2d(2,2)
+            #self.conv2 = nn.Conv2d(32, 64, 4,2)
+            #self.conv2 = nn.Conv2d(32, 32, 3, stride=2)#288
+            #self.conv3 = nn.Conv2d(64, 64, 1, stride=1)
+
+            if config.env_name=='MsPacman':
+                self.conv = nn.Sequential(
+                    nn.Conv2d(4, 32, kernel_size=8, stride=4),
+                    nn.ReLU(),
+                    nn.Conv2d(32, 64, kernel_size=4, stride=2),
+                    nn.ReLU(),
+                    nn.Conv2d(64, 64, kernel_size=3, stride=1),
+                    nn.ReLU()
+                )
+            else:
+                self.conv = nn.Sequential(
+                    # nn.Conv2d(1, 32, kernel_size=8, stride=4),
+                    # nn.ReLU(),
+                    nn.Conv2d(1, 64, kernel_size=4, stride=2),
+                    nn.ReLU(),
+                    nn.Conv2d(64, 64, kernel_size=3, stride=1),
+                    nn.ReLU()
+                )
+
+            conv_out_size = self.get_conv_out(config.state_space)
+            self.fc = nn.Sequential(
+                nn.Linear(conv_out_size, 512),
+                nn.ReLU(),
+                nn.Linear(512, self.action_dim)
+            )
+            #self.fc1=nn.Linear(64,self.action_dim)
+            #self.fc2=nn.Linear(32,self.action_dim)
         self.init()
 
+    def get_conv_out(self, shape):
+
+        o = self.conv(torch.zeros(1, *shape))
+        return int(np.prod(o.size()))
     def re_init_optim(self):
         self.optim = self.config.optim(self.parameters(), lr=self.config.actor_lr)
 
     def forward(self, state):
-        x = self.fc1(state)
+        if len(self.config.state_space) <= 1:
+            x = self.fc1(state)
+        else:
+            #state=state.float()/255
+            #x=F.relu(self.conv1(state))
+
+            #x = F.relu(self.conv2(x))
+            #print(x.shape)
+            #assert False
+            #x = F.relu(self.conv3(x))
+
+            #x=self.pool(F.relu(self.conv2(x)))
+            #x = torch.flatten(x, 1)
+            #x=x.view(state.shape[0],-1)
+            conv_out = self.conv(state).view(state.size()[0], -1)
+            x= self.fc(conv_out)
+            #x=F.relu(self.fc1(x))
+            #x = F.relu(self.fc2(x))
+
+
         return x
 
     def get_action_w_prob_dist(self, state, explore=0):
+        state=torch.unsqueeze(state,dim=0)
         x = self.forward(state)
         dist = F.softmax(x, -1)
 
