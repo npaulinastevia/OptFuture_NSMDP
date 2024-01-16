@@ -25,6 +25,15 @@ class Solver:
             self.action_dim = self.env.action_space.n
         print("Actions space: {} :: State space: {}".format(self.action_dim, self.state_dim))
         config.state_space=np.shape(self.env.reset())
+
+        self.task_schedule_cartpole = {
+            0: {"gravity": 10, "length": 0.2},
+            200: {"gravity": 100, "length": 1.2},
+            300: {"gravity": 10, "length": 0.2},
+            400: dict(length=0.1,gravity=9.8),
+            500: dict(length=0.2, gravity=-12.0),
+            600: dict(length=0.5,gravity=0.9),
+        } #OG GRAVITY =9.8, OG LENGTH=0.5
         self.model = config.algo(config=config)
     @staticmethod
     def check_bug1():
@@ -127,6 +136,8 @@ class Solver:
         flag_injected_bug_spotted = [False, False]
         f = open('bug_log_RELINE.txt', 'w')
         f.close()
+        self.env.env.gravity = 9.8
+        self.env.env.length = 0.5
         for episode in range(start_ep, self.config.max_episodes):
             # Reset both environment and model before a new episode
 
@@ -392,6 +403,8 @@ class Solver:
 
         steps = 0
         t0 = time()
+        task_id=0
+        total_step=0
         for episode in range(start_ep, self.config.max_episodes):
             # Reset both environment and model before a new episode
 
@@ -404,6 +417,21 @@ class Solver:
             while not done:
                 # self.env.render(mode='human')
 
+                if task_id==0:
+                    self.env.env.gravity = self.task_schedule_cartpole[task_id]['gravity']
+                    self.env.env.length = self.task_schedule_cartpole[task_id]['length']
+                    state = self.env.reset()
+                    task_id = task_id + 1
+                else:
+                    if task_id < len(list(self.task_schedule_cartpole.keys())):
+
+
+                        if total_step==sorted(list(self.task_schedule_cartpole.keys()))[task_id]:
+
+                            self.env.env.gravity=self.task_schedule_cartpole[total_step]['gravity']
+                            self.env.env.length = self.task_schedule_cartpole[total_step]['length']
+                            state = self.env.reset()
+                            task_id=task_id+1
                 action, extra_info, dist = self.model.get_action(state)
                 new_state, reward, done, info = self.env.step(action=action)
 
@@ -414,6 +442,7 @@ class Solver:
                 total_r += reward
                 # regret += (reward - info['Max'])
                 step += 1
+                total_step=total_step+1
                 if step >= self.config.max_steps:
                     break
 
@@ -477,7 +506,7 @@ def main(train=True, inc=-1, hyper='default', base=-1):
 
     print("Total train time taken: {}".format(time()-t))
     test = time()
-    solver.test_mspacman()
+    solver.test_cartpole()
     #solver.test_blockmaze()
     print("Total test time taken: {}".format(time() - test))
 

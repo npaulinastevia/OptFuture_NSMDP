@@ -60,15 +60,15 @@ class Parser(object):
         #parser.add_argument("--env_name", default='NS_Reco', help="Environment to run the code")
         #parser.add_argument("--env_name", default='NS_Reacher', help="Environment to run the code")
         #parser.add_argument("--env_name", default='Blockmaze', help="Environment to run the code")
-        #parser.add_argument("--env_name", default='CartPole', help="Environment to run the code")
-        parser.add_argument("--env_name", default='MsPacman', help="Environment to run the code")
+        parser.add_argument("--env_name", default='CartPole', help="Environment to run the code")
+        #parser.add_argument("--env_name", default='MsPacman', help="Environment to run the code")
 
-        parser.add_argument("--max_episodes", default=int(20), help="maximum number of episodes (75000)", type=int)
+        parser.add_argument("--max_episodes", default=int(100), help="maximum number of episodes (75000)", type=int)
         parser.add_argument("--max_steps", default=30000, help="maximum steps per episode (500)", type=int)
 
     def NS(self, parser):
         parser.add_argument("--buffer_size", default=int(1e3), help="Size of memory buffer (3e5)", type=int)
-        parser.add_argument("--extrapolator_basis", default='Poly', help="Basis for least-square", choices=['Linear', 'Poly', 'Fourier'])
+        parser.add_argument("--extrapolator_basis", default='Fourier', help="Basis for least-square", choices=['Linear', 'Poly', 'Fourier'])
         parser.add_argument("--batch_size", default=32, help="Batch size", type=int)
         parser.add_argument("--fourier_k", default=7, help="Terms in extrapolator fourier basis", type=int)
         parser.add_argument("--max_inner", default=150, help="Iterations per update", type=int)

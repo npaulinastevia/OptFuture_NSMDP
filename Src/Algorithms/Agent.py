@@ -55,7 +55,7 @@ class Agent:
         except ValueError as error:
             print("Loading failed: ", error)
 
-    def step(self, loss, clip_norm=1.0):#0.25
+    def step(self, loss, clip_norm=0.25):#0.25
         self.clear_gradients()
         loss.backward()
         #for _, module in self.modules:
