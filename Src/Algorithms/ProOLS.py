@@ -111,10 +111,12 @@ class ProOLS(Agent):
             if self.config.entropy_lambda > 0:
                 if self.config.cont_actions:
                     entropy = torch.sum(dist_all.entropy().view(B, H, -1).sum(dim=-1) * mask) / torch.sum(mask)  # (BxH)xA -> BxH
+
                 else:
                     log_pi_all = dist_all.view(B, H, -1)
                     pi_all = torch.exp(log_pi_all)                                      # (BxH)xA -> BxHxA
                     entropy = torch.sum(torch.sum(pi_all * log_pi_all, dim=-1) * mask) / torch.sum(mask)
+
 
                 loss = loss + self.config.entropy_lambda * entropy
 
