@@ -46,9 +46,10 @@ class Categorical(Policy):
             self.action_dim = action_dim
         #self.fc1=nn.Conv2d(1,)
         self.config=config
+        self.fc3 = nn.Linear(self.action_dim, config.se_actions)
 
         if len(config.state_space)<=1:
-            self.fc1 = nn.Linear(self.state_dim, self.action_dim)
+            self.fc1 = nn.Linear(self.state_dim, config.se_actions)
         else:
             #self.conv1=nn.Conv2d(1,32,8,stride=4)
             #torch.nn.init.kaiming_uniform_(self.conv1.weight,mode='fan_in',nonlinearity='relu')
@@ -96,6 +97,9 @@ class Categorical(Policy):
     def forward(self, state):
         if len(self.config.state_space) <= 1:
             x = self.fc1(state)
+            #if self.action_dim==self.config.se_actions:
+            ##    x=self.fc3(x)
+              #  return x
         else:
             #state=state.float()/255
             #x=F.relu(self.conv1(state))

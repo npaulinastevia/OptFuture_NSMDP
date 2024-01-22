@@ -32,9 +32,10 @@ raw_basis: true
 restore: false
 save_count: 10
 save_model: true
+se_actions: 2
 seed: 2
 speed: 2
 state_lr: 0.001
 summary: true
 swarm: false
-timestamp: 1|17|9:45:59
+timestamp: 1|22|17:2:18

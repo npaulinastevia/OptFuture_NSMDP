@@ -38,6 +38,8 @@ class ProOLS(Agent):
         else:
             state = self.state_features.forward(state)
         #state = self.state_features.forward(state.view(1, -1))
+        #if n_actions is not None:
+        #    self.actor.action_dim=n_actions
         action, prob, dist = self.actor.get_action_w_prob_dist(state)
 
         # if self.config.debug:

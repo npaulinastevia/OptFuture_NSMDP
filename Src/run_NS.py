@@ -2,6 +2,7 @@
 # from __future__ import print_function
 import os
 
+import gym
 import numpy as np
 import Src.Utils.utils as utils
 from Src.NS_parser import Parser
@@ -9,6 +10,8 @@ from Src.config import Config
 from time import time
 import matplotlib.pyplot as plt
 from PIL import Image
+from Environments.nscartpole_v0 import NSCartPoleV0
+from Environments.nscartpole_v2 import NSCartPoleV2
 from skimage.metrics import structural_similarity as ssim
 import cv2
 class Solver:
@@ -25,15 +28,27 @@ class Solver:
             self.action_dim = self.env.action_space.n
         print("Actions space: {} :: State space: {}".format(self.action_dim, self.state_dim))
         config.state_space=np.shape(self.env.reset())
+        f = 'results.txt'
+        f = open('results.txt', 'a+')
+        f.write('n_actions,x1,x2,x3,x4,rew'+ '\n')
+        f.close()
 
-        self.task_schedule_cartpole = {
-            0: {"gravity": 10, "length": 0.2},
-            200: {"gravity": 100, "length": 1.2},
-            300: {"gravity": 10, "length": 0.2},
-            400: dict(length=0.1,gravity=9.8),
-            500: dict(length=0.2, gravity=-12.0),
-            600: dict(length=0.5,gravity=0.9),
-        } #OG GRAVITY =9.8, OG LENGTH=0.5
+       # self.task_schedule_cartpole = {
+        #    0: {"gravity": 10, "length": 0.2},
+        #    200: {"gravity": 100, "length": 1.2},
+         #   300: {"gravity": 10, "length": 0.2},
+         #   400: dict(length=0.1,gravity=9.8),
+          #  500: dict(length=0.2, gravity=-12.0),
+         #   600: dict(length=0.5,gravity=0.9),
+       # } #OG GRAVITY =9.8, OG LENGTH=0.5
+        self.task = {
+            40: NSCartPoleV0(),
+            70: NSCartPoleV2(),
+            # 64: {"gravity": 10, "length": 0.2},
+            # 150: dict(length=0.1,gravity=9.8),
+            # 200: dict(length=0.2, gravity=-12.0),
+            # 250: dict(length=0.5,gravity=0.9),
+        }
         self.model = config.algo(config=config)
     @staticmethod
     def check_bug1():
@@ -136,8 +151,8 @@ class Solver:
         flag_injected_bug_spotted = [False, False]
         f = open('bug_log_RELINE.txt', 'w')
         f.close()
-        self.env.env.gravity = 9.8
-        self.env.env.length = 0.5
+        self.env=gym.make('CartPole-v1')
+
         for episode in range(start_ep, self.config.max_episodes):
             # Reset both environment and model before a new episode
 
@@ -152,6 +167,10 @@ class Solver:
 
                 action, extra_info, dist = self.model.get_action(state)
                 new_state, reward, done, info = self.env.step(action=action)
+                f = open('results.txt', 'a+')
+                f.write(str(self.env.action_space.n) +','+str(new_state[0]) +','+str(new_state[1])+','+str(new_state[2])+','+str(new_state[3])+','+str(reward )+ '\n')
+                f.write('\n')
+                f.close()
                 if -0.5 < new_state[0] < -0.45 and not flag_injected_bug_spotted[0]:
                     reward += 50
                     flag_injected_bug_spotted[0] = True
@@ -407,7 +426,9 @@ class Solver:
         total_step=0
         for episode in range(start_ep, self.config.max_episodes):
             # Reset both environment and model before a new episode
-
+            if episode in self.task.keys():
+                    self.env.change_task(self.task[episode])
+            print(self.env.env.action_space.n)
             state = self.env.reset()
 
             self.model.reset()
@@ -417,23 +438,27 @@ class Solver:
             while not done:
                 # self.env.render(mode='human')
 
-                if task_id==0:
-                    self.env.env.gravity = self.task_schedule_cartpole[task_id]['gravity']
-                    self.env.env.length = self.task_schedule_cartpole[task_id]['length']
-                    state = self.env.reset()
-                    task_id = task_id + 1
-                else:
-                    if task_id < len(list(self.task_schedule_cartpole.keys())):
-
-
-                        if total_step==sorted(list(self.task_schedule_cartpole.keys()))[task_id]:
-
-                            self.env.env.gravity=self.task_schedule_cartpole[total_step]['gravity']
-                            self.env.env.length = self.task_schedule_cartpole[total_step]['length']
-                            state = self.env.reset()
-                            task_id=task_id+1
+                # if task_id==0:
+                #     self.env.env.gravity = self.task_schedule_cartpole[task_id]['gravity']
+                #     self.env.env.length = self.task_schedule_cartpole[task_id]['length']
+                #     state = self.env.reset()
+                #     task_id = task_id + 1
+                # else:
+                #     if task_id < len(list(self.task_schedule_cartpole.keys())):
+                #
+                #
+                #         if total_step==sorted(list(self.task_schedule_cartpole.keys()))[task_id]:
+                #
+                #             self.env.env.gravity=self.task_schedule_cartpole[total_step]['gravity']
+                #             self.env.env.length = self.task_schedule_cartpole[total_step]['length']
+                #             state = self.env.reset()
+                #             task_id=task_id+1
                 action, extra_info, dist = self.model.get_action(state)
                 new_state, reward, done, info = self.env.step(action=action)
+                f = open('results.txt', 'a+')
+                f.write(str(self.env.env.action_space.n) +','+str(new_state[0]) +','+str(new_state[1])+','+str(new_state[2])+','+str(new_state[3])+','+str(reward )+ '\n')
+                f.write('\n')
+                f.close()
 
                 self.model.update(state, action, extra_info, reward, new_state, done)
                 state = new_state

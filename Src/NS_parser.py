@@ -65,6 +65,7 @@ class Parser(object):
 
         parser.add_argument("--max_episodes", default=int(100), help="maximum number of episodes (75000)", type=int)
         parser.add_argument("--max_steps", default=30000, help="maximum steps per episode (500)", type=int)
+        parser.add_argument("--se_actions", default=2, help="", type=int)
 
     def NS(self, parser):
         parser.add_argument("--buffer_size", default=int(1e3), help="Size of memory buffer (3e5)", type=int)
