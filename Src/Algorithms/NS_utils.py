@@ -136,9 +136,9 @@ class Categorical(Policy):
 
         return x
 
-    def get_action_w_prob_dist(self, state, explore=0):
+    def get_action_w_prob_dist(self, state, explore=0,actions=None,hidden=None):
         state=torch.unsqueeze(state,dim=0)
-        x = self.forward(state)
+        x = self.forward(state,actions,hidden)
         dist = F.softmax(x, -1)
 
         probs = dist.cpu().view(-1).data.numpy()

@@ -31,7 +31,7 @@ class ProOLS(Agent):
         self.counter += 1
         self.gamma_t = 1
 
-    def get_action(self, state):
+    def get_action(self, state,actions=None,hidden=None):
         state = tensor(state, dtype=float32, requires_grad=False, device=self.config.device)
         if len(self.config.state_space)<=1:
             state = self.state_features.forward(state.view(1, -1))
@@ -40,7 +40,7 @@ class ProOLS(Agent):
         #state = self.state_features.forward(state.view(1, -1))
         #if n_actions is not None:
         #    self.actor.action_dim=n_actions
-        action, prob, dist = self.actor.get_action_w_prob_dist(state)
+        action, prob, dist = self.actor.get_action_w_prob_dist(state,actions,hidden)
 
         # if self.config.debug:
         #     self.track_entropy(dist, action)
