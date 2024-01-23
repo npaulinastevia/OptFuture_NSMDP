@@ -3857,3 +3857,15 @@ n_actions,x1,x2,x3,x4,rew
 
 2,-0.073869005,-1.5271757,0.21642531,2.5675356,1.0
 
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew
+n_actions,x1,x2,x3,x4,rew

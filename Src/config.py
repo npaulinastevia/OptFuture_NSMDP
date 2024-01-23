@@ -97,9 +97,9 @@ class Config(object):
 
     def get_domain(self, tag, args, path, debug=True):
 
-        if tag == 'NS_Reco' or tag == 'NS_Reacher' or tag=='Blockmaze' or tag=='CartPole' or tag=='MsPacman':
+        if tag == 'NS_Reco' or tag == 'NS_Reacher' or tag=='Blockmaze' or tag=='CartPole' or tag=='MsPacman' or tag=='BugLoc':
             obj = utils.dynamic_load(path, tag, load_class=True)
-            env = obj(speed=args.speed, oracle=args.oracle, debug=debug)
+            env = obj(speed=args.speed, oracle=args.oracle, debug=debug,args=args)
             return env, False, env.action_space.dtype == np.float32
 
         else:

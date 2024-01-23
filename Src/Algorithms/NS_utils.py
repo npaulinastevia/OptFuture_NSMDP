@@ -68,21 +68,36 @@ class Categorical(Policy):
                     nn.ReLU()
                 )
             else:
-                self.conv = nn.Sequential(
-                    # nn.Conv2d(1, 32, kernel_size=8, stride=4),
-                    # nn.ReLU(),
-                    nn.Conv2d(1, 64, kernel_size=4, stride=2),
-                    nn.ReLU(),
-                    nn.Conv2d(64, 64, kernel_size=3, stride=1),
-                    nn.ReLU()
-                )
+                self.conv1 = nn.Conv2d(in_channels=1, out_channels=16, kernel_size=5, stride=2)
+                self.bn1 = nn.BatchNorm2d(16)
+                self.conv2 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=5, stride=2)
+                self.bn2 = nn.BatchNorm2d(32)
+                self.conv3 = nn.Conv2d(in_channels=32, out_channels=32, kernel_size=5, stride=2)
+                self.bn3 = nn.BatchNorm2d(32)
+                self.lstm_hidden_space = 256
 
-            conv_out_size = self.get_conv_out(config.state_space)
-            self.fc = nn.Sequential(
-                nn.Linear(conv_out_size, 512),
-                nn.ReLU(),
-                nn.Linear(512, self.action_dim)
-            )
+                def conv2d_size_out(size, kernel_size=5, stride=2):
+                    return (size - (kernel_size - 1) - 1) // stride + 1
+                convw = conv2d_size_out(conv2d_size_out(conv2d_size_out(config.state_space[1])))
+                convh = conv2d_size_out(conv2d_size_out(conv2d_size_out(config.state_space[0])))
+                linear_input_size = convw * convh * 32 + self.action_dim
+                self.lstm = nn.LSTM(input_size=linear_input_size, hidden_size=self.lstm_hidden_space, batch_first=True)
+                self.lin_layer2 = nn.Linear(self.lstm_hidden_space, self.action_dim)
+            #     self.conv = nn.Sequential(
+            #         # nn.Conv2d(1, 32, kernel_size=8, stride=4),
+            #         # nn.ReLU(),
+            #         nn.Conv2d(1, 64, kernel_size=4, stride=2),
+            #         nn.ReLU(),
+            #         nn.Conv2d(64, 64, kernel_size=3, stride=1),
+            #         nn.ReLU()
+            #     )
+            #
+            # conv_out_size = self.get_conv_out(config.state_space)
+            # self.fc = nn.Sequential(
+            #     nn.Linear(conv_out_size, 512),
+            #     nn.ReLU(),
+            #     nn.Linear(512, self.action_dim)
+            # )
             #self.fc1=nn.Linear(64,self.action_dim)
             #self.fc2=nn.Linear(32,self.action_dim)
         self.init()
@@ -94,28 +109,29 @@ class Categorical(Policy):
     def re_init_optim(self):
         self.optim = self.config.optim(self.parameters(), lr=self.config.actor_lr)
 
-    def forward(self, state):
+    def forward(self, x,actions=None,hidden=None):
         if len(self.config.state_space) <= 1:
-            x = self.fc1(state)
+            x = self.fc1(x)
             #if self.action_dim==self.config.se_actions:
             ##    x=self.fc3(x)
               #  return x
         else:
-            #state=state.float()/255
-            #x=F.relu(self.conv1(state))
+            #conv_out = self.conv(state).view(state.size()[0], -1)
+            #x= self.fc(conv_out)
+            x = x.unsqueeze(1) if x.dim() == 3 else x
+            x = F.relu(self.bn1(self.conv1(x)))
+            x = F.relu(self.bn2(self.conv2(x)))
+            x = F.relu(self.bn3(self.conv3(x)))
+            x = x.view(x.size(0), -1)
+            # x = F.relu(self.lin_layer1(x))
+            x = torch.concat([x.unsqueeze(1), actions.unsqueeze(1) if actions.dim() != 3 else actions], axis=2)
+            x, (new_h, new_c) = self.lstm(x, (hidden[0], hidden[1]))
+            x = self.lin_layer2(x)
+            # return torch.softmax((x * actions), dim=-1), [new_h, new_c]
+            x = torch.softmax(x, dim=-1) * actions
+            x = x / x.sum()
+            return x, [new_h, new_c]
 
-            #x = F.relu(self.conv2(x))
-            #print(x.shape)
-            #assert False
-            #x = F.relu(self.conv3(x))
-
-            #x=self.pool(F.relu(self.conv2(x)))
-            #x = torch.flatten(x, 1)
-            #x=x.view(state.shape[0],-1)
-            conv_out = self.conv(state).view(state.size()[0], -1)
-            x= self.fc(conv_out)
-            #x=F.relu(self.fc1(x))
-            #x = F.relu(self.fc2(x))
 
 
         return x

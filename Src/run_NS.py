@@ -4,6 +4,8 @@ import os
 
 import gym
 import numpy as np
+import torch
+
 import Src.Utils.utils as utils
 from Src.NS_parser import Parser
 from Src.config import Config
@@ -12,8 +14,14 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from Environments.nscartpole_v0 import NSCartPoleV0
 from Environments.nscartpole_v2 import NSCartPoleV2
-from skimage.metrics import structural_similarity as ssim
+#from skimage.metrics import structural_similarity as ssim
 import cv2
+
+
+def to_one_hot(array, max_size):
+    temp = np.ones(max_size)
+    temp[array] = 0
+    return np.expand_dims(temp, axis=0)
 class Solver:
     def __init__(self, config):
         # Initialize the required variables
@@ -133,6 +141,12 @@ class Solver:
                 print(s)
                 return True
         return False
+
+    @staticmethod
+    def to_one_hot(array, max_size):
+        temp = np.ones(max_size)
+        temp[array] = 0
+        return np.expand_dims(temp, axis=0)
     def test_cartpole(self):
         return_history = []
         true_rewards = []
@@ -406,7 +420,7 @@ class Solver:
                 #if step >= self.config.max_steps:
                 #    break
 
-    def train(self):
+    def train_cartpole(self):
         # Learn the model on the environment
         return_history = []
         true_rewards = []
@@ -461,6 +475,126 @@ class Solver:
                 f.close()
 
                 self.model.update(state, action, extra_info, reward, new_state, done)
+                state = new_state
+
+                # Tracking intra-episode progress
+                total_r += reward
+                # regret += (reward - info['Max'])
+                step += 1
+                total_step=total_step+1
+                if step >= self.config.max_steps:
+                    break
+
+            # track inter-episode progress
+            # returns.append(total_r)
+            steps += step
+            # rm = 0.9*rm + 0.1*total_r
+            rm += total_r
+            if episode%ckpt == 0 or episode == self.config.max_episodes-1:
+                rm_history.append(rm)
+                return_history.append(total_r)
+                if self.config.debug and self.config.env_name == 'NS_Reco':
+                    action_prob.append(dist)
+                    true_rewards.append(self.env.get_rewards())
+
+                print("{} :: Rewards {:.3f} :: Rewards_per_eps {:.3f} :: steps: {:.2f} :: Time: {:.3f}({:.5f}/step) :: Entropy : {:.3f} :: Grads : {}".
+                      format(episode, rm,total_r, steps/ckpt, (time() - t0)/ckpt, (time() - t0)/steps, self.model.entropy, self.model.get_grads()))
+
+                # self.model.save()
+                utils.save_plots(return_history, config=self.config, name='{}_rewards'.format(self.config.seed))
+
+                t0 = time()
+                steps = 0
+
+
+        if self.config.debug and self.config.env_name == 'NS_Reco':
+
+            fig1, fig2 = plt.figure(figsize=(8, 6)), plt.figure(figsize=(8, 6))
+            ax1, ax2 = fig1.add_subplot(1, 1, 1), fig2.add_subplot(1, 1, 1)
+
+            action_prob = np.array(action_prob).T
+            true_rewards = np.array(true_rewards).T
+
+            for idx in range(len(dist)):
+                ax1.plot(action_prob[idx])
+                ax2.plot(true_rewards[idx])
+
+            plt.show()
+    def train(self):
+        # Learn the model on the environment
+        return_history = []
+        true_rewards = []
+        action_prob = []
+        dev = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+        ckpt = self.config.save_after
+        rm_history, regret, rm, start_ep = [], 0, 0, 0
+        # if self.config.restore:
+        #     returns = list(np.load(self.config.paths['results']+"rewards.npy"))
+        #     rm = returns[-1]
+        #     start_ep = np.size(returns)
+        #     print(start_ep)
+
+        steps = 0
+        t0 = time()
+        task_id=0
+        total_step=0
+        for episode in range(start_ep, self.config.max_episodes):
+            # Reset both environment and model before a new episode
+            if episode in self.task.keys():
+                    self.env.change_task(self.task[episode])
+            print(self.env.env.action_space.n)
+            prev_obs = self.env.reset()
+            hidden = [torch.zeros([1, 1, self.model.actor.lstm_hidden_space]).to(dev),
+                      torch.zeros([1, 1, self.model.actor.lstm_hidden_space]).to(dev)]
+            #hidden_value = [torch.zeros([1, 1, value_model.lstm_hidden_space]).to(dev),
+            #                torch.zeros([1, 1, value_model.lstm_hidden_space]).to(dev)]
+            picked = []
+
+            self.model.reset()
+
+            step, total_r = 0, 0
+            done = False
+            while not done:
+                # self.env.render(mode='human')
+
+                # if task_id==0:
+                #     self.env.env.gravity = self.task_schedule_cartpole[task_id]['gravity']
+                #     self.env.env.length = self.task_schedule_cartpole[task_id]['length']
+                #     state = self.env.reset()
+                #     task_id = task_id + 1
+                # else:
+                #     if task_id < len(list(self.task_schedule_cartpole.keys())):
+                #
+                #
+                #         if total_step==sorted(list(self.task_schedule_cartpole.keys()))[task_id]:
+                #
+                #             self.env.env.gravity=self.task_schedule_cartpole[total_step]['gravity']
+                #             self.env.env.length = self.task_schedule_cartpole[total_step]['length']
+                #             state = self.env.reset()
+                #             task_id=task_id+1
+                prev_obs = torch.Tensor(prev_obs).to(dev)
+                prev_obs = prev_obs.unsqueeze(0)
+                temp_action = torch.from_numpy(to_one_hot(picked, max_size=self.env.env.action_space.n)).to(
+                    dev).type(torch.float)
+                with torch.no_grad():
+                    #action, temp_hidden = policy_model(prev_obs, actions=temp_action, hidden=hidden)
+                    #_, temp_hidden_value = policy_model(prev_obs, actions=temp_action, hidden=hidden_value)
+                    action, extra_info, dist = self.model.get_action(prev_obs, actions=temp_action, hidden=hidden)
+                new_state, reward, done, info = self.env.step(action=action)
+                picked.append(action)
+                info['hidden'] = [item.cpu().numpy() for item in hidden]
+                info['picked'] = picked
+                info['hidden'] = [item.cpu().numpy() for item in hidden]
+                hidden = temp_hidden
+
+
+                self.model.update(state, action, extra_info, reward, new_state, done)
+                assert False
+                f = open('results.txt', 'a+')
+                f.write(str(self.env.env.action_space.n) +','+str(new_state[0]) +','+str(new_state[1])+','+str(new_state[2])+','+str(new_state[3])+','+str(reward )+ '\n')
+                f.write('\n')
+                f.close()
                 state = new_state
 
                 # Tracking intra-episode progress

@@ -306,6 +306,7 @@ class TrajectoryBuffer:
         self.mask = torch.zeros((buffer_size, max_horizon), dtype=float32, requires_grad=False, device=config.device)
         self.r = torch.zeros((buffer_size, max_horizon), dtype=float32, requires_grad=False, device=config.device)
         self.ids = torch.zeros(buffer_size, dtype=int32, requires_grad=False, device=config.device)
+        self.info = []
 
         self.buffer_size = buffer_size
         self.episode_ctr = -1
@@ -346,7 +347,7 @@ class TrajectoryBuffer:
         self.r[self.buffer_pos].fill_(0)
         self.mask[self.buffer_pos].fill_(0)
 
-    def add(self, s1, a1, beta1, r1):
+    def add(self, s1, a1, beta1, r1,info={}):
         pos = self.buffer_pos
         step = self.timestep_ctr
 
@@ -357,6 +358,7 @@ class TrajectoryBuffer:
         self.mask[pos][step] = torch.tensor(1.0, dtype=float32)
 
         self.timestep_ctr += 1
+        self.info=self.info+info
 
     def _get(self, idx):
         # ids represent the episode number
