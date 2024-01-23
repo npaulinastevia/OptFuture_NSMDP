@@ -164,7 +164,7 @@ class LTREnv(gym.Env):
                 positions = self.df[self.df['cid'].isin(self.picked)]['match'].to_numpy()
                 max_position = np.argmax(positions) + 1 if any(positions == 1) else -1
                 return reward, 1.0 / max_position,current_average_precision
-            return reward, None
+            return reward, None,None
 
     def step(self, action, return_rr=False):
         temp = self.filtered_df['cid'].tolist()[action]

@@ -3,128 +3,29 @@ Dynamically loaded from:  <class 'Environments.CartPole.CartPole'>
 Module path:  Src.Algorithms.ProOLS ProOLS
 Dynamically loaded from:  <class 'Src.Algorithms.ProOLS.ProOLS'>
 =====Configurations=====
- Namespace(NN_basis_dim='32', Policy_basis_dim='32', actor_lr=0.01, algo_name='ProOLS', base=0, batch_size=32, buffer_size=1000, debug=True, delta=5, entropy_lambda=0.1, env_name='CartPole', experiment='Test_runfolder', extrapolator_basis='Fourier', folder_suffix='Default', fourier_coupled=True, fourier_k=7, fourier_order=-1, gamma=0.99, gauss_std=1.5, gpu=0, hyper='default', importance_clip=10.0, inc=1, log_output='term_file', max_episodes=100, max_inner=150, max_steps=30000, optim='rmsprop', oracle=-1000, raw_basis=True, restore=False, save_count=10, save_model=True, se_actions=2, seed=2, speed=2, state_lr=0.001, summary=True, swarm=False, timestamp='1|22|17:2:18')
+ Namespace(NN_basis_dim='32', Policy_basis_dim='32', actor_lr=0.01, algo_name='ProOLS', base=0, batch_size=128, buffer_size=1000, cache_path='C:\\Users\\phili\\Downloads\\10428077\\Replication\\.buffer_cache_ac', debug=True, delta=4, entropy_lambda=0.1, env_name='CartPole', experiment='Test_runfolder', extrapolator_basis='Fourier', file_path='C:\\Users\\panou\\PycharmProjects\\OptFuture_NSMDP\\LTR\\\\', folder_suffix='Default', fourier_coupled=True, fourier_k=7, fourier_order=-1, gamma=0.99, gauss_std=1.5, gpu=0, hyper='default', importance_clip=10.0, inc=1, log_output='term_file', max_episodes=150, max_inner=150, max_steps=30000, optim='rmsprop', oracle=-1000, prev_policy_model_path=None, prev_value_model_path=None, project_name='AspectJ', raw_basis=True, restore=False, save_count=10, save_model=True, save_path='C:\\Users\\phili\\Downloads\\10428077\\Replication\\LTR\\Models\\AC\\Entropy\\AspectJ\\\\', se_actions=2, seed=2, speed=2, state_lr=0.001, summary=True, swarm=False, timestamp='1|23|15:43:14', train_data_path='C:\\Users\\panou\\PycharmProjects\\AspectJ.csv')
 Actions space: 2 :: State space: 4
 State features:  [('dummy_param', torch.Size([1]))]
+1000 bufffer sizzzze
 Policy:  [('fc3.weight', torch.Size([2, 2])), ('fc3.bias', torch.Size([2])), ('fc1.weight', torch.Size([2, 4])), ('fc1.bias', torch.Size([2]))]
-9
-0 :: Rewards 6.000 :: Rewards_per_eps 6.000 :: steps: 0.70 :: Time: 0.001(0.00186/step) :: Entropy : 0.000 :: Grads : [[], []]
-9
-9
-9
-9
-9
-9
-9
-9
-9
-9
-10 :: Rewards 79.000 :: Rewards_per_eps 7.000 :: steps: 8.30 :: Time: 0.579(0.06981/step) :: Entropy : 0.000 :: Grads : [[0.033762623, 0.15150538], []]
-9
-9
-9
-9
-9
-9
-9
-9
-9
-9
-20 :: Rewards 152.000 :: Rewards_per_eps 7.000 :: steps: 8.30 :: Time: 1.182(0.14240/step) :: Entropy : 0.000 :: Grads : [[0.049343955, 0.10558602], []]
-9
-9
-9
-9
-9
-9
-9
-9
-9
-9
-30 :: Rewards 225.000 :: Rewards_per_eps 8.000 :: steps: 8.30 :: Time: 1.242(0.14967/step) :: Entropy : 0.000 :: Grads : [[0.025386728, 0.16932163], []]
-9
-9
-9
-9
-9
-9
-9
-9
-9
-5
-40 :: Rewards 296.000 :: Rewards_per_eps 9.000 :: steps: 8.10 :: Time: 1.234(0.15236/step) :: Entropy : 0.000 :: Grads : [[0.061316736, 0.059916638], []]
-5
-5
-5
-5
-5
-5
-5
-5
-5
-5
-50 :: Rewards 377.000 :: Rewards_per_eps 8.000 :: steps: 9.10 :: Time: 1.217(0.13376/step) :: Entropy : 0.000 :: Grads : [[8.463685e-05, 2.9223156e-05], []]
-5
-5
-5
-5
-5
-5
-5
-5
-5
-5
-60 :: Rewards 459.000 :: Rewards_per_eps 8.000 :: steps: 9.20 :: Time: 1.201(0.13059/step) :: Entropy : 0.000 :: Grads : [[0.008672044, 0.008261997], []]
-5
-5
-5
-5
-5
-5
-5
-5
-5
-3
-70 :: Rewards 545.000 :: Rewards_per_eps 13.000 :: steps: 9.60 :: Time: 1.199(0.12490/step) :: Entropy : 0.000 :: Grads : [[0.00022739479, 0.00038667163], []]
-3
-3
-3
-3
-3
-3
-3
-3
-3
-3
-80 :: Rewards 668.000 :: Rewards_per_eps 12.000 :: steps: 13.30 :: Time: 1.219(0.09166/step) :: Entropy : 0.000 :: Grads : [[3.591534e-05, 0.00012201354], []]
-3
-3
-3
-3
-3
-3
-3
-3
-3
-3
-90 :: Rewards 789.000 :: Rewards_per_eps 12.000 :: steps: 13.10 :: Time: 1.210(0.09235/step) :: Entropy : 0.000 :: Grads : [[1.5224986e-05, 3.848946e-05], []]
-3
-3
-3
-3
-3
-3
-3
-3
-3
-99 :: Rewards 891.000 :: Rewards_per_eps 12.000 :: steps: 11.10 :: Time: 1.213(0.10929/step) :: Entropy : 0.000 :: Grads : [[5.023103e-06, 1.5373746e-05], []]
-Total train time taken: 116.29375743865967
+0 :: Rewards 8.000 :: Rewards_per_eps 8.000 :: steps: 0.60 :: Time: 0.001(0.00189/step) :: Entropy : 0.000 :: Grads : [[], []]
+15 :: Rewards 144.000 :: Rewards_per_eps 9.000 :: steps: 10.07 :: Time: 1.171(0.11628/step) :: Entropy : 0.000 :: Grads : [[0.027382117, 0.16119045], []]
+30 :: Rewards 281.000 :: Rewards_per_eps 9.000 :: steps: 10.13 :: Time: 1.244(0.12279/step) :: Entropy : 0.000 :: Grads : [[0.063221544, 0.027394064], []]
+45 :: Rewards 421.000 :: Rewards_per_eps 9.000 :: steps: 10.33 :: Time: 1.671(0.16170/step) :: Entropy : 0.000 :: Grads : [[0.059108973, 0.06889394], []]
+60 :: Rewards 567.000 :: Rewards_per_eps 11.000 :: steps: 10.73 :: Time: 1.699(0.15828/step) :: Entropy : 0.000 :: Grads : [[0.026432715, 0.16733152], []]
+75 :: Rewards 703.000 :: Rewards_per_eps 9.000 :: steps: 10.07 :: Time: 1.766(0.17543/step) :: Entropy : 0.000 :: Grads : [[0.047638282, 0.11640778], []]
+90 :: Rewards 833.000 :: Rewards_per_eps 8.000 :: steps: 9.67 :: Time: 1.316(0.13617/step) :: Entropy : 0.000 :: Grads : [[0.055134952, 0.08952297], []]
+105 :: Rewards 963.000 :: Rewards_per_eps 8.000 :: steps: 9.67 :: Time: 1.804(0.18659/step) :: Entropy : 0.000 :: Grads : [[0.054003064, 0.08953713], []]
+120 :: Rewards 1088.000 :: Rewards_per_eps 9.000 :: steps: 9.33 :: Time: 1.888(0.20230/step) :: Entropy : 0.000 :: Grads : [[0.059226766, 0.071871154], []]
+135 :: Rewards 1218.000 :: Rewards_per_eps 8.000 :: steps: 9.67 :: Time: 1.944(0.20107/step) :: Entropy : 0.000 :: Grads : [[0.04412816, 0.12762344], []]
+149 :: Rewards 1336.000 :: Rewards_per_eps 8.000 :: steps: 8.80 :: Time: 1.587(0.18039/step) :: Entropy : 0.000 :: Grads : [[0.055533186, 0.101736456], []]
+Total train time taken: 242.77226972579956
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 1 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-0 :: Rewards 10.000 :: steps: 1.00 :: Time: 0.002(0.00171/step) :: Entropy : 0.000 :: Grads : [[5.023103e-06, 1.5373746e-05], []]
+0 :: Rewards 17.000 :: steps: 1.13 :: Time: 0.002(0.00204/step) :: Entropy : 0.000 :: Grads : [[0.055533186, 0.101736456], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 2 episodes
@@ -175,7 +76,6 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 11 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-10 :: Rewards 106.000 :: steps: 9.60 :: Time: 1.210(0.12609/step) :: Entropy : 0.000 :: Grads : [[2.4191053e-07, 1.4843101e-07], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 12 episodes
@@ -201,6 +101,7 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 16 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
+15 :: Rewards 233.000 :: steps: 14.40 :: Time: 1.882(0.13071/step) :: Entropy : 0.000 :: Grads : [[0.051962756, 0.12001068], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 17 episodes
@@ -226,7 +127,6 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 21 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-20 :: Rewards 201.000 :: steps: 9.50 :: Time: 1.206(0.12693/step) :: Entropy : 0.000 :: Grads : [[4.51733e-08, 1.4400548e-07], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 22 episodes
@@ -277,7 +177,7 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 31 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-30 :: Rewards 295.000 :: steps: 9.40 :: Time: 1.209(0.12859/step) :: Entropy : 0.000 :: Grads : [[4.5269736e-08, 2.7273384e-07], []]
+30 :: Rewards 439.000 :: steps: 13.73 :: Time: 1.913(0.13932/step) :: Entropy : 0.000 :: Grads : [[0.0420204, 0.13957354], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 32 episodes
@@ -328,7 +228,6 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 41 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-40 :: Rewards 390.000 :: steps: 9.50 :: Time: 1.207(0.12705/step) :: Entropy : 0.000 :: Grads : [[3.8929393e-09, 4.778162e-09], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 42 episodes
@@ -354,6 +253,7 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 46 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
+45 :: Rewards 675.000 :: steps: 15.73 :: Time: 1.896(0.12050/step) :: Entropy : 0.000 :: Grads : [[0.04079725, 0.14106923], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 47 episodes
@@ -379,7 +279,6 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 51 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-50 :: Rewards 486.000 :: steps: 9.60 :: Time: 1.200(0.12496/step) :: Entropy : 0.000 :: Grads : [[1.0690038e-09, 9.587631e-09], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 52 episodes
@@ -430,7 +329,7 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 61 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-60 :: Rewards 578.000 :: steps: 9.20 :: Time: 1.203(0.13078/step) :: Entropy : 0.000 :: Grads : [[4.838522e-10, 5.1796896e-09], []]
+60 :: Rewards 930.000 :: steps: 17.00 :: Time: 1.471(0.08653/step) :: Entropy : 0.000 :: Grads : [[0.029414698, 0.15887928], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 62 episodes
@@ -481,7 +380,6 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 71 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-70 :: Rewards 668.000 :: steps: 9.00 :: Time: 1.201(0.13347/step) :: Entropy : 0.000 :: Grads : [[1.11403366e-10, 1.154337e-09], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 72 episodes
@@ -507,6 +405,7 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 76 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
+75 :: Rewards 1217.000 :: steps: 19.13 :: Time: 1.953(0.10208/step) :: Entropy : 0.000 :: Grads : [[0.044626385, 0.1341768], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 77 episodes
@@ -532,7 +431,6 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 81 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-80 :: Rewards 760.000 :: steps: 9.20 :: Time: 1.226(0.13323/step) :: Entropy : 0.000 :: Grads : [[3.3512436e-11, 2.7400698e-10], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 82 episodes
@@ -583,7 +481,7 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 91 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-90 :: Rewards 855.000 :: steps: 9.50 :: Time: 1.219(0.12835/step) :: Entropy : 0.000 :: Grads : [[1.9878352e-11, 3.3464898e-10], []]
+90 :: Rewards 1485.000 :: steps: 17.87 :: Time: 2.012(0.11261/step) :: Entropy : 0.000 :: Grads : [[0.040895827, 0.14524987], []]
 
 Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 92 episodes
@@ -629,5 +527,34 @@ Report injected bugs spotted during last 1000 episodes:
 0 injected bug spotted in 100 episodes
 1 injected bug spotted in 0 episodes
 2 injected bugs spotted in 0 episodes
-99 :: Rewards 938.000 :: steps: 8.30 :: Time: 1.212(0.14599/step) :: Entropy : 0.000 :: Grads : [[8.6480545e-11, 1.4823002e-09], []]
-Total test time taken: 122.07607865333557
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 101 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 102 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 103 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 104 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 105 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+
+Report injected bugs spotted during last 1000 episodes:
+0 injected bug spotted in 106 episodes
+1 injected bug spotted in 0 episodes
+2 injected bugs spotted in 0 episodes
+105 :: Rewards 1726.000 :: steps: 16.07 :: Time: 2.046(0.12736/step) :: Entropy : 0.000 :: Grads : [[0.053207424, 0.11818198], []]

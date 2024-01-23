@@ -60,21 +60,21 @@ class Parser(object):
         #parser.add_argument("--env_name", default='NS_Reco', help="Environment to run the code")
         #parser.add_argument("--env_name", default='NS_Reacher', help="Environment to run the code")
         #parser.add_argument("--env_name", default='Blockmaze', help="Environment to run the code")
-        #parser.add_argument("--env_name", default='CartPole', help="Environment to run the code")
+        parser.add_argument("--env_name", default='CartPole', help="Environment to run the code")
         #parser.add_argument("--env_name", default='MsPacman', help="Environment to run the code")
-        parser.add_argument("--env_name", default='BugLoc', help="Environment to run the code")
+        #parser.add_argument("--env_name", default='BugLoc', help="Environment to run the code")
 
-        parser.add_argument("--max_episodes", default=int(100), help="maximum number of episodes (75000)", type=int)
+        parser.add_argument("--max_episodes", default=int(150), help="maximum number of episodes (75000)", type=int)
         parser.add_argument("--max_steps", default=30000, help="maximum steps per episode (500)", type=int)
         parser.add_argument("--se_actions", default=2, help="", type=int)
-        parser.add_argument('--file_path', default=r"C:\Users\phili\Downloads\10428077\Replication\LTR\\",
+        parser.add_argument('--file_path', default=r"C:\Users\panou\PycharmProjects\OptFuture_NSMDP\LTR\\",
                             help='File Path')
         parser.add_argument('--cache_path', default=r"C:\Users\phili\Downloads\10428077\Replication\.buffer_cache_ac",
                             help='Cache Path')
         parser.add_argument('--prev_policy_model_path', default=None, help='Trained Policy Path')
         parser.add_argument('--prev_value_model_path', default=None, help='Trained Value Path')
         parser.add_argument('--train_data_path',
-                            default=r'C:\Users\phili\Downloads\10428077\Replication\org.aspectj\AspectJ.csv',
+                            default=r'C:\Users\panou\PycharmProjects\AspectJ.csv',
                             help='Training Data Path')
         parser.add_argument('--save_path',
                             default=r'C:\Users\phili\Downloads\10428077\Replication\LTR\Models\AC\Entropy\AspectJ\\',
@@ -84,10 +84,10 @@ class Parser(object):
     def NS(self, parser):
         parser.add_argument("--buffer_size", default=int(1e3), help="Size of memory buffer (3e5)", type=int)
         parser.add_argument("--extrapolator_basis", default='Fourier', help="Basis for least-square", choices=['Linear', 'Poly', 'Fourier'])
-        parser.add_argument("--batch_size", default=32, help="Batch size", type=int)
+        parser.add_argument("--batch_size", default=128, help="Batch size", type=int)
         parser.add_argument("--fourier_k", default=7, help="Terms in extrapolator fourier basis", type=int)
         parser.add_argument("--max_inner", default=150, help="Iterations per update", type=int)
-        parser.add_argument("--delta", default=5, help="Time steps in future for optimization", type=int)
+        parser.add_argument("--delta", default=4, help="Time steps in future for optimization", type=int)#5
         parser.add_argument("--entropy_lambda", default=0.1, help="Lagrangian for policy's entropy", type=float)
         parser.add_argument("--importance_clip", default=10.0, help="Clip value for importance ratio", type=float)
         parser.add_argument("--oracle", default=-1000, help="NS Fixed at given episode", type=int)

@@ -41,7 +41,7 @@ class BugLoc:
             self.observation_space = self.env.observation_space
 
 
-            self.action_space = Space(size=self.env.action_space.n)
+            self.action_space = Space(size=self.env.action_space.n,n=self.env.action_space.n)
             self.seed=self.env.seed
 
 

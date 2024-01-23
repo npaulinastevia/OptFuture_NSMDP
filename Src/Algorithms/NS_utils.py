@@ -81,6 +81,8 @@ class Categorical(Policy):
                 convw = conv2d_size_out(conv2d_size_out(conv2d_size_out(config.state_space[1])))
                 convh = conv2d_size_out(conv2d_size_out(conv2d_size_out(config.state_space[0])))
                 linear_input_size = convw * convh * 32 + self.action_dim
+                #print(linear_input_size)4031
+
                 self.lstm = nn.LSTM(input_size=linear_input_size, hidden_size=self.lstm_hidden_space, batch_first=True)
                 self.lin_layer2 = nn.Linear(self.lstm_hidden_space, self.action_dim)
             #     self.conv = nn.Sequential(
@@ -118,43 +120,50 @@ class Categorical(Policy):
         else:
             #conv_out = self.conv(state).view(state.size()[0], -1)
             #x= self.fc(conv_out)
+
+            #x=x.view((actions.shape[0],-1,x.shape[-2],x.shape[-1]))
+
             x = x.unsqueeze(1) if x.dim() == 3 else x
             x = F.relu(self.bn1(self.conv1(x)))
             x = F.relu(self.bn2(self.conv2(x)))
             x = F.relu(self.bn3(self.conv3(x)))
             x = x.view(x.size(0), -1)
             # x = F.relu(self.lin_layer1(x))
-            x = torch.concat([x.unsqueeze(1), actions.unsqueeze(1) if actions.dim() != 3 else actions], axis=2)
-            x, (new_h, new_c) = self.lstm(x, (hidden[0], hidden[1]))
+            #torch.Size([4000, 4000]) torch.Size([8, 1, 31])
+            x=x.view((actions.shape[0],actions.shape[1],-1)) if actions.dim()>=3 else x
+            x = torch.concat([x.unsqueeze(1)  if x.dim() != 3 else x, actions.unsqueeze(1) if actions.dim() != 3 else actions], axis=2)
+            x, (new_h, new_c) = self.lstm(x, (hidden[0] if hidden[0].shape[0]==1 else hidden[0].view((1,hidden[0].shape[0],-1)),
+                                              hidden[1] if hidden[0].shape[0]==1 else hidden[1].view((1,hidden[0].shape[0],-1))))
             x = self.lin_layer2(x)
             # return torch.softmax((x * actions), dim=-1), [new_h, new_c]
             x = torch.softmax(x, dim=-1) * actions
             x = x / x.sum()
-            return x, [new_h, new_c]
+            return x, dict(h=[new_h, new_c])
 
 
 
-        return x
+        return x,{}
 
     def get_action_w_prob_dist(self, state, explore=0,actions=None,hidden=None):
         state=torch.unsqueeze(state,dim=0)
-        x = self.forward(state,actions,hidden)
-        dist = F.softmax(x, -1)
 
+        x,info = self.forward(state,actions=actions,hidden=hidden)
+        dist = F.softmax(x, -1)
         probs = dist.cpu().view(-1).data.numpy()
         action = np.random.choice(self.action_dim, p=probs)
 
-        return action, probs[action], probs
+        return action, probs[action], probs,info
 
     def get_prob(self, state, action):
         x = self.forward(state)
         dist = F.softmax(x, -1)
         return dist.gather(1, action), dist
 
-    def get_logprob_dist(self, state, action):
-        x = self.forward(state)                                                              # BxA
-        log_dist = F.log_softmax(x, -1)                                                      # BxA
-        return log_dist.gather(1, action), log_dist                                          # BxAx(Bx1) -> B
+    def get_logprob_dist(self, state, action,actions=None,hidden=None):
+        x,info = self.forward(state,actions=actions,hidden=hidden)                                                              # BxA
+        log_dist = F.log_softmax(x, -1)
+        # BxA
+        return log_dist.view((-1,log_dist.shape[-1])).gather(1, action), log_dist                                          # BxAx(Bx1) -> B
 
 
 class Insulin_Gaussian(Policy):

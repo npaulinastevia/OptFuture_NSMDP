@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from Environments.nscartpole_v0 import NSCartPoleV0
 from Environments.nscartpole_v2 import NSCartPoleV2
+from Environments.NSCartpole import NSCartPoleV1
 #from skimage.metrics import structural_similarity as ssim
 import cv2
 
@@ -36,10 +37,13 @@ class Solver:
             self.action_dim = self.env.action_space.n
         print("Actions space: {} :: State space: {}".format(self.action_dim, self.state_dim))
         config.state_space=np.shape(self.env.reset())
+        import time
+        self.id=str(int(time.time()))
         f = 'results.txt'
-        f = open('results.txt', 'a+')
-        f.write('n_actions,x1,x2,x3,x4,rew'+ '\n')
+        f = open('results_cart'+self.id+'.txt', 'a+')
+        f.write('n_actions,x1,x2,x3,x4,rew,steps'+ '\n')
         f.close()
+        self.frame_id = 0
 
        # self.task_schedule_cartpole = {
         #    0: {"gravity": 10, "length": 0.2},
@@ -50,8 +54,8 @@ class Solver:
          #   600: dict(length=0.5,gravity=0.9),
        # } #OG GRAVITY =9.8, OG LENGTH=0.5
         self.task = {
-            40: NSCartPoleV0(),
-            70: NSCartPoleV2(),
+            0: NSCartPoleV0(),
+            -1: NSCartPoleV1(),
             # 64: {"gravity": 10, "length": 0.2},
             # 150: dict(length=0.1,gravity=9.8),
             # 200: dict(length=0.2, gravity=-12.0),
@@ -179,10 +183,10 @@ class Solver:
             while not done:
                 # self.env.render(mode='human')
 
-                action, extra_info, dist = self.model.get_action(state)
+                action, extra_info, dist,_ = self.model.get_action(state)
                 new_state, reward, done, info = self.env.step(action=action)
-                f = open('results.txt', 'a+')
-                f.write(str(self.env.action_space.n) +','+str(new_state[0]) +','+str(new_state[1])+','+str(new_state[2])+','+str(new_state[3])+','+str(reward )+ '\n')
+                f = open('results_cart'+self.id+'.txt', 'a+')
+                f.write(str(self.env.action_space.n) +','+str(new_state[0]) +','+str(new_state[1])+','+str(new_state[2])+','+str(new_state[3])+','+str(reward )+','+str(self.frame_id ) +'\n')
                 f.write('\n')
                 f.close()
                 if -0.5 < new_state[0] < -0.45 and not flag_injected_bug_spotted[0]:
@@ -198,6 +202,7 @@ class Solver:
                 total_r += reward
                 # regret += (reward - info['Max'])
                 step += 1
+                self.frame_id = self.frame_id + 1
                 if step >= self.config.max_steps:
                     break
 
@@ -442,7 +447,7 @@ class Solver:
             # Reset both environment and model before a new episode
             if episode in self.task.keys():
                     self.env.change_task(self.task[episode])
-            print(self.env.env.action_space.n)
+
             state = self.env.reset()
 
             self.model.reset()
@@ -467,10 +472,10 @@ class Solver:
                 #             self.env.env.length = self.task_schedule_cartpole[total_step]['length']
                 #             state = self.env.reset()
                 #             task_id=task_id+1
-                action, extra_info, dist = self.model.get_action(state)
+                action, extra_info, dist,_ = self.model.get_action(state)
                 new_state, reward, done, info = self.env.step(action=action)
-                f = open('results.txt', 'a+')
-                f.write(str(self.env.env.action_space.n) +','+str(new_state[0]) +','+str(new_state[1])+','+str(new_state[2])+','+str(new_state[3])+','+str(reward )+ '\n')
+                f = open('results_cart'+self.id+'.txt', 'a+')
+                f.write(str(self.env.env.action_space.n) +','+str(new_state[0]) +','+str(new_state[1])+','+str(new_state[2])+','+str(new_state[3])+','+str(reward )+','+str(self.frame_id ) + '\n')
                 f.write('\n')
                 f.close()
 
@@ -482,6 +487,7 @@ class Solver:
                 # regret += (reward - info['Max'])
                 step += 1
                 total_step=total_step+1
+                self.frame_id=self.frame_id+1
                 if step >= self.config.max_steps:
                     break
 
@@ -543,7 +549,7 @@ class Solver:
             # Reset both environment and model before a new episode
             if episode in self.task.keys():
                     self.env.change_task(self.task[episode])
-            print(self.env.env.action_space.n)
+
             prev_obs = self.env.reset()
             hidden = [torch.zeros([1, 1, self.model.actor.lstm_hidden_space]).to(dev),
                       torch.zeros([1, 1, self.model.actor.lstm_hidden_space]).to(dev)]
@@ -578,9 +584,11 @@ class Solver:
                 temp_action = torch.from_numpy(to_one_hot(picked, max_size=self.env.env.action_space.n)).to(
                     dev).type(torch.float)
                 with torch.no_grad():
+
                     #action, temp_hidden = policy_model(prev_obs, actions=temp_action, hidden=hidden)
                     #_, temp_hidden_value = policy_model(prev_obs, actions=temp_action, hidden=hidden_value)
-                    action, extra_info, dist = self.model.get_action(prev_obs, actions=temp_action, hidden=hidden)
+                    action, extra_info, dist,infH = self.model.get_action(prev_obs, actions=temp_action, hidden=hidden)
+                    temp_hidden=infH['h']
                 new_state, reward, done, info = self.env.step(action=action)
                 picked.append(action)
                 info['hidden'] = [item.cpu().numpy() for item in hidden]
@@ -589,13 +597,13 @@ class Solver:
                 hidden = temp_hidden
 
 
-                self.model.update(state, action, extra_info, reward, new_state, done)
-                assert False
+                self.model.update(prev_obs, action, extra_info, reward, new_state, done,info=info)
+
                 f = open('results.txt', 'a+')
                 f.write(str(self.env.env.action_space.n) +','+str(new_state[0]) +','+str(new_state[1])+','+str(new_state[2])+','+str(new_state[3])+','+str(reward )+ '\n')
                 f.write('\n')
                 f.close()
-                state = new_state
+                prev_obs = new_state
 
                 # Tracking intra-episode progress
                 total_r += reward
@@ -661,7 +669,7 @@ def main(train=True, inc=-1, hyper='default', base=-1):
 
     # Training mode
     if train:
-        solver.train()
+        solver.train_cartpole()
 
     print("Total train time taken: {}".format(time()-t))
     test = time()

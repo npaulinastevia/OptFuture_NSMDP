@@ -6,16 +6,23 @@ from Src.Utils import Basis, utils
 from Src.Algorithms import NS_utils
 from Src.Algorithms.Extrapolator import OLS
 
-"""
 
-"""
+def to_one_hot(array, max_size):
+    temp = np.ones(max_size)
+    temp[array] = 0
+    return np.expand_dims(temp, axis=0)
+
 class ProOLS(Agent):
     def __init__(self, config):
         super(ProOLS, self).__init__(config)
         # Get state features and instances for Actor and Value function
         self.state_features = Basis.get_Basis(config=config)
+        config.buffer_size = 1000
+        print(config.buffer_size,'bufffer sizzzze')
         self.actor, self.atype, self.action_size = NS_utils.get_Policy(state_dim=self.state_features.feature_dim,
                                                                        config=config)
+        if len(self.config.state_space) > 1:
+            config.lstm=self.actor.lstm_hidden_space
         self.memory = utils.TrajectoryBuffer(buffer_size=config.buffer_size, state_dim=self.state_dim,
                                              action_dim=self.action_size, atype=self.atype, config=config, dist_dim=1)
         self.extrapolator = OLS(max_len=config.buffer_size, delta=config.delta, basis_type=config.extrapolator_basis,
@@ -40,22 +47,24 @@ class ProOLS(Agent):
         #state = self.state_features.forward(state.view(1, -1))
         #if n_actions is not None:
         #    self.actor.action_dim=n_actions
-        action, prob, dist = self.actor.get_action_w_prob_dist(state,actions,hidden)
+
+        action, prob, dist,info = self.actor.get_action_w_prob_dist(state,actions=actions,hidden=hidden)
 
         # if self.config.debug:
         #     self.track_entropy(dist, action)
 
-        return action, prob, dist
+        return action, prob, dist,info
 
-    def update(self, s1, a1, prob, r1, s2, done):
+    def update(self, s1, a1, prob, r1, s2, done,**kwargs):
         # Batch episode history
-        self.memory.add(s1, a1, prob, self.gamma_t * r1)
+        self.memory.add(s1, a1, prob, self.gamma_t * r1,kwargs)
         self.gamma_t *= self.config.gamma
 
         if done and self.counter % self.config.delta == 0:
             self.optimize()
 
     def optimize(self):
+        device = "cuda:0" if torch.cuda.is_available() else "cpu"
         if self.memory.size <= self.config.fourier_k:
             # If number of rows is less than number of features (columns), it wont have full column rank.
             return
@@ -68,7 +77,18 @@ class ProOLS(Agent):
         # Inner optimization loop
         # Note: Works best with large number of iterations with small step-sizes.
         for iter in range(self.config.max_inner):
-            id, s, a, beta, r, mask = self.memory.sample(batch_size)            # B, BxHxD, BxHxA, BxH, BxH, BxH
+            id, s, a, beta, r, mask,*info = self.memory.sample(batch_size)
+            # B, BxHxD, BxHxA, BxH, BxH, BxH
+            if len(info)>0:
+                h1,h2,p=info
+                batch_hidden=(h1,h2)
+                batch_picked=p
+                #batch_hidden = torch.tensor(np.array(
+                #    [np.stack([np.array(item['hidden'][0]) for item in info], axis=2)[0],
+                #     np.stack([np.array(item['hidden'][1]) for item in info], axis=2)[0]])).to(device)
+                #batch_picked = torch.tensor(np.array(
+                #    [to_one_hot(item['picked'], max_size=self.config.env.action_space.n) for item in info])).to(device).type(
+                 #   torch.float)
 
             B, H, *D = s.shape
             _, _, A = a.shape
@@ -77,7 +97,11 @@ class ProOLS(Agent):
             s_feature = self.state_features.forward(s.view(B * H, *D))           # BxHxD -> (BxH)xd
 
             # Get action probabilities
-            log_pi, dist_all = self.actor.get_logprob_dist(s_feature, a.view(B * H, -1))     # (BxH)xd, (BxH)xA
+            if len(info)>0:
+
+                log_pi, dist_all = self.actor.get_logprob_dist(s_feature, a.view(B * H, -1),actions=batch_picked, hidden=batch_hidden)     # (BxH)xd, (BxH)xA
+            else:
+                log_pi, dist_all = self.actor.get_logprob_dist(s_feature, a.view(B * H, -1))
             log_pi = log_pi.view(B, H)                                                       # (BxH)x1 -> BxH
             pi_a = torch.exp(log_pi)                                                         # (BxH)x1 -> BxH
 

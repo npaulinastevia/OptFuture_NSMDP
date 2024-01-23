@@ -3,6 +3,7 @@ import string
 import gym
 from gym.spaces import Box, Discrete
 from Environments.NSCartpole import NSCartPoleV1
+from Environments.nscartpole_v2 import NSCartPoleV2
 from Src.Utils.utils import Space
 
 
@@ -16,7 +17,7 @@ class CartPole(gym.Env):
                  max_step_length=1,
                  max_steps=500, **kwargs):
             super().__init__()
-            self.env=NSCartPoleV1()
+            self.env=NSCartPoleV2()
             self._max_seq_len = max_seq_len
             self.debug = debug
 
@@ -38,7 +39,7 @@ class CartPole(gym.Env):
             self.observation_space = self.env.observation_space
 
 
-            self.action_space = Space(size=gym.make('CartPole-v1').action_space.n)
+            self.action_space = Space(size=gym.make('CartPole-v1').action_space.n,n=gym.make('CartPole-v1').action_space.n)
 
     def step(self, action):
         self.steps_taken += 1

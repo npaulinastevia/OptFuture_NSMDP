@@ -148,7 +148,7 @@ def stablesoftmax(x):
 
 
 class Space:
-    def __init__(self, low=[0], high=[1], dtype=np.uint8, size=-1):
+    def __init__(self, low=[0], high=[1], dtype=np.uint8, size=-1,n=None):
         if size == -1:
             self.shape = np.shape(low)
         else:
@@ -156,7 +156,8 @@ class Space:
         self.low = np.array(low)
         self.high = np.array(high)
         self.dtype = dtype
-        self.n = len(self.low)
+        #self.n = len(self.low)
+        self.n = n
 
 def get_var_w(shape, scale=1):
     w = torch.Tensor(shape[0], shape[1])
@@ -296,10 +297,17 @@ class TrajectoryBuffer:
 
         max_horizon = config.env.max_horizon
 
-        if len(config.state_space)<=2:
+        if len(config.state_space)<=1:
             self.s = torch.zeros((buffer_size, max_horizon, state_dim), dtype=stype, requires_grad=False, device=config.device)
         else:
+
             self.s = torch.zeros((buffer_size, max_horizon, *config.state_space), dtype=stype, requires_grad=False,
+                                 device=config.device)
+            self.h1 = torch.zeros((buffer_size,1, config.lstm), dtype=stype, requires_grad=False,
+                                 device=config.device)
+            self.h2 = torch.zeros((buffer_size,1, config.lstm), dtype=stype, requires_grad=False,
+                                 device=config.device)
+            self.picked = torch.zeros((buffer_size, max_horizon, config.env.action_space.n), dtype=stype, requires_grad=False,
                                  device=config.device)
         self.a = torch.zeros((buffer_size, max_horizon, action_dim), dtype=atype, requires_grad=False, device=config.device)
         self.beta = torch.ones((buffer_size, max_horizon), dtype=float32, requires_grad=False, device=config.device)
@@ -313,7 +321,7 @@ class TrajectoryBuffer:
         self.timestep_ctr = 0
         self.buffer_pos = -1
         self.valid_len = 0
-
+        self.config=config
         self.atype = atype
         self.stype = stype
         self.config = config
@@ -356,9 +364,13 @@ class TrajectoryBuffer:
         self.beta[pos][step] = torch.tensor(beta1, dtype=float32)
         self.r[pos][step] = torch.tensor(r1, dtype=float32)
         self.mask[pos][step] = torch.tensor(1.0, dtype=float32)
-
+        if info:
+            self.h1[pos][:]=torch.tensor(info['info']['hidden'][0], dtype=self.stype)
+            self.h2[pos][:] = torch.tensor(info['info']['hidden'][1], dtype=self.stype)
+            self.picked[pos][step][:np.array(info['info']['picked']).shape[0]] = torch.tensor(info['info']['picked'], dtype=self.stype)
+            self.info = self.info + [info['info']]
         self.timestep_ctr += 1
-        self.info=self.info+info
+
 
     def _get(self, idx):
         # ids represent the episode number
@@ -372,11 +384,13 @@ class TrajectoryBuffer:
                 ids -= self.ids[0]
             else:
                 ids -= self.ids[self.buffer_pos + 1]
+        if len(self.config.state_space) <= 1:
+            return ids, self.s[idx], self.a[idx], self.beta[idx], self.r[idx], self.mask[idx]
 
-        return ids, self.s[idx], self.a[idx], self.beta[idx], self.r[idx], self.mask[idx]
-
+        return ids, self.s[idx], self.a[idx], self.beta[idx], self.r[idx], self.mask[idx], self.h1[:][idx], self.h2[:][idx], self.picked[idx]
     def sample(self, batch_size):
         count = min(batch_size, self.valid_len)
+
         return self._get(np.random.choice(self.valid_len, count))
 
     def get_all(self):
