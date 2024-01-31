@@ -163,7 +163,7 @@ if __name__ == "__main__":
         loss_v.backward()
         optimizer.step()
         print("%d: loss=%.3f reward_mean=%.1f, reward_bound=%.1f" % (iter_no, loss_v.item(), reward_m, reward_b))
-        if iter_no == 2:#MAX_ITER:
+        if iter_no == MAX_ITER:
             print("Training ends")
             print("\    /\ \n )  ( ')  meow!\n(  /  )\n \(__)|")
             torch.save(net.state_dict(), final_directory+'/model_RELINE')
